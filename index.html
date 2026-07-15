@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kanban del sprint · Jean Master Barber Supply · 15–20 julio 2026</title>
+<style>
+:root{
+  --bg:#061426;--panel:#0d2038;--card:#132c49;--line:#f4c430;
+  --text:#f8fafc;--muted:#b8c6d9;--navy:#0b1f3a;--yellow:#f4c430;
+  --green:#2dd4bf;--red:#ef4444;--blue:#60a5fa;--violet:#c084fc
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(150deg,#04101f,#0a2340);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{padding:24px;min-width:1220px}
+.top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:14px}
+h1{margin:0;font-size:30px;letter-spacing:-.5px}
+.subtitle{color:var(--muted);margin-top:5px}
+.deadline{background:var(--yellow);color:#111827;padding:12px 15px;border-radius:10px;font-weight:900;text-align:center;box-shadow:0 8px 22px #0004}
+.goal{background:#0f766e24;border:1px solid #2dd4bf66;border-left:5px solid var(--green);padding:12px 14px;border-radius:9px;margin:12px 0 16px}
+.summary{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0 0 16px}
+.day{background:#ffffff0c;border:1px solid #ffffff1c;border-radius:8px;padding:9px;text-align:center}
+.day strong{display:block;color:var(--yellow);font-size:13px}.day span{font-size:11px;color:var(--muted)}
+
+.nav{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:0 0 14px;
+}
+.nav a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:43px;
+  border:1px solid var(--yellow);
+  background:#112c49;
+  color:var(--text);
+  text-decoration:none;
+  border-radius:9px;
+  padding:9px 14px;
+  font-weight:850;
+  transition:background .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.nav a:hover{
+  background:#173b61;
+  transform:translateY(-1px);
+  box-shadow:0 7px 18px #0003;
+}
+.nav a:focus-visible{
+  outline:3px solid #ffffff;
+  outline-offset:3px;
+}
+.nav a.active{
+  background:var(--yellow);
+  color:#111827;
+  box-shadow:0 7px 18px #0003;
+}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:17px}
+button,.import-label{border:1px solid #f4c430;background:#112c49;color:white;border-radius:7px;padding:9px 13px;font-weight:750;cursor:pointer}
+button:hover,.import-label:hover{background:#173b61}
+.import-label input{display:none}
+.board{display:grid;grid-template-columns:repeat(6,minmax(190px,1fr));gap:12px;align-items:start}
+.column{background:var(--panel);border:1px solid #294563;border-radius:12px;padding:10px;min-height:230px}
+.column>header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--line);padding:3px 2px 8px;margin-bottom:10px}
+.column h2{font-size:13px;margin:0}.count{background:var(--yellow);color:#111827;font-weight:900;border-radius:99px;padding:2px 8px}
+.card{background:var(--card);border:1px solid #365577;border-radius:9px;padding:10px;margin:9px 0;box-shadow:0 6px 17px #0003}
+.card .id{color:var(--yellow);font-weight:900;font-size:12px}
+.card h3{font-size:14px;margin:4px 0 7px;line-height:1.25}
+.meta{font-size:11px;color:var(--muted)}
+.date-badge{display:inline-block;margin-top:7px;background:#ffffff14;border:1px solid #ffffff24;border-radius:99px;padding:2px 7px;font-size:10px}
+details{margin-top:8px;border-top:1px solid #365577;padding-top:7px}
+summary{cursor:pointer;color:var(--green);font-weight:800;font-size:12px}
+details h4{margin:9px 0 2px;font-size:11px;color:var(--yellow)}
+details p{margin:0;color:#e1eaf5;font-size:11px}
+.user-state{margin-top:8px;padding:5px 7px;background:#854d0e;color:#fef08a;border-radius:5px;font-size:10px;font-weight:800}
+.action-panel label{display:block;font-size:11px;margin-top:7px}
+select,textarea{width:100%;margin-top:3px;background:#071426;color:#fff;border:1px solid #4b6585;border-radius:5px;padding:6px}
+.card-actions{display:grid;gap:5px;margin-top:7px}.card-actions button{padding:6px;font-size:11px}
+.card-actions .reject{background:#8b1d1d;border-color:#fca5a5}
+.decision-history p{margin:4px 0;font-size:9px;color:#a7f3d0}
+.legend{margin-top:16px;color:var(--muted);font-size:11px}
+@media(max-width:1200px){body{overflow-x:auto}}
+@media print{
+  .actions,.action-panel,.nav{display:none!important}
+  body{background:white;color:black}main{padding:7px;min-width:0}
+  .top{align-items:flex-start}.deadline{border:1px solid #333}
+  .summary{grid-template-columns:repeat(3,1fr)}
+  .board{grid-template-columns:repeat(3,1fr)}
+  .column,.card,.day,.goal{background:white;color:black;box-shadow:none;break-inside:avoid}
+  .meta,.subtitle,details p,.legend,.day span{color:#334155}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <div>
+    <h1>Kanban Scrum · Jean Master Barber Supply</h1>
+    <div class="subtitle">Sprint único de identidad visual · 15/07/2026 al 20/07/2026 · Cliente: Jean Franco Arellan · Coordinación: Manuel Estrada</div>
+  </div>
+  <div class="deadline">ENTREGA FINAL<br>20/07/2026</div>
+</div>
+
+
+<nav class="nav" aria-label="Navegación principal del proyecto">
+  <a class="active" aria-current="page" href="index.html">Kanban del sprint</a>
+  <a href="historias-usuario.html">Historias de Usuario</a>
+</nav>
+
+<div class="goal"><strong>Objetivo del sprint:</strong> seleccionar una propuesta, convertirla en un sistema de identidad original, legible y escalable, validarlo para impresión, bordado, web y redes sociales, y entregar los archivos finales con una guía rápida de uso.<br><br><strong>Estado actual:</strong> se está esperando que el cliente, <strong>Jean Franco Arellan</strong>, decida cuál de las tres propuestas será desarrollada. Hasta recibir esa decisión, las tareas posteriores permanecen bloqueadas.</div>
+
+<div class="summary">
+  <div class="day"><strong>15 JUL</strong><span>Brief, conceptos y selección</span></div>
+  <div class="day"><strong>16 JUL</strong><span>Auditoría, símbolo, tipografía y color</span></div>
+  <div class="day"><strong>17 JUL</strong><span>Versiones del logotipo</span></div>
+  <div class="day"><strong>18 JUL</strong><span>Vectorización y formatos</span></div>
+  <div class="day"><strong>19 JUL</strong><span>Pruebas y QA del cliente</span></div>
+  <div class="day"><strong>20 JUL</strong><span>Correcciones, guía y entrega</span></div>
+</div>
+
+<div class="actions">
+  <button onclick="downloadTxt()">Descargar TXT</button>
+  <button onclick="downloadCsv()">Descargar para Excel</button>
+  <button onclick="window.print()">Guardar / imprimir PDF</button>
+  <button onclick="exportDecisions()">Exportar decisiones</button>
+  <label class="import-label">Importar decisiones<input type="file" accept=".json,application/json" onchange="importDecisions(this)"></label>
+  <button onclick="resetDecisions()">Restablecer decisiones</button>
+</div>
+
+<div class="board" id="board"></div>
+<div class="legend">P0 = obligatorio para la entrega · P1 = importante · Las decisiones se guardan localmente en este navegador. La tarea JM-03 bloquea el trabajo posterior hasta que Jean Franco Arellan seleccione la propuesta.</div>
+</main>
+
+<script>
+const tasks = [{"id": "JM-01", "title": "Consolidar brief y requisitos técnicos", "priority": "P0", "date": "15/07/2026", "owner": "Diseño / Product Owner", "status": "CULMINADO", "acceptance": "El brief recoge nombre de marca, sector de distribución, público en EE. UU., preferencia azul marino y amarillo, originalidad, legibilidad, escalabilidad, bordado, impresión, web y redes sociales.", "next": "Usar el brief como criterio obligatorio para evaluar y desarrollar la propuesta seleccionada.", "depends": "Ninguna", "deliverable": "Brief maestro aprobado"}, {"id": "JM-02", "title": "Crear tres propuestas conceptuales iniciales", "priority": "P0", "date": "15/07/2026", "owner": "Diseño", "status": "CULMINADO", "acceptance": "Existen tres conceptos visuales separados con orientación corporativa de distribuidora y paleta azul marino/amarillo.", "next": "Comparar las tres opciones y seleccionar una base de trabajo.", "depends": "JM-01", "deliverable": "Tres propuestas conceptuales"}, {"id": "JM-03", "title": "Seleccionar la propuesta base", "priority": "P0", "date": "15/07/2026", "owner": "Cliente y decisor: Jean Franco Arellan", "status": "EN ESPERA DE IMPLEMENTACIÓN", "acceptance": "Jean Franco Arellan identifica por número la propuesta elegida y confirma si desea conservar, combinar o eliminar algún elemento.", "next": "Esperar la decisión de Jean Franco Arellan. Cuando responda, registrar: Propuesta 1, 2 o 3, junto con sus observaciones concretas.", "depends": "JM-02", "deliverable": "Decisión del cliente registrada"}, {"id": "JM-04", "title": "Auditar la propuesta seleccionada", "priority": "P0", "date": "16/07/2026", "owner": "Dirección de arte", "status": "POR HACER", "acceptance": "Se documentan fortalezas, problemas de legibilidad, complejidad, diferenciación, coherencia sectorial y riesgos para bordado o impresión.", "next": "Convertir los hallazgos en una lista cerrada de correcciones.", "depends": "JM-03", "deliverable": "Informe de auditoría visual"}, {"id": "JM-05", "title": "Simplificar el símbolo para bordado y tamaños pequeños", "priority": "P0", "date": "16/07/2026", "owner": "Diseño de marca", "status": "POR HACER", "acceptance": "El símbolo mantiene reconocimiento sin líneas frágiles, detalles diminutos, degradados ni elementos que desaparezcan en tamaños reducidos.", "next": "Probar el isotipo en 16 px, 24 px, 30 mm y bordado simulado.", "depends": "JM-04", "deliverable": "Isotipo simplificado"}, {"id": "JM-06", "title": "Definir tipografía principal y secundaria", "priority": "P0", "date": "16/07/2026", "owner": "Diseño tipográfico", "status": "POR HACER", "acceptance": "La marca utiliza tipografías reales, legibles y con licencia adecuada; el nombre completo se lee con claridad y no depende de letras generadas por IA.", "next": "Ajustar kerning, jerarquía y conversión futura a trazados.", "depends": "JM-04", "deliverable": "Sistema tipográfico"}, {"id": "JM-07", "title": "Definir paleta cromática maestra", "priority": "P0", "date": "16/07/2026", "owner": "Branding / Psicología del color", "status": "POR HACER", "acceptance": "Se aprueban azul marino y amarillo/dorado con códigos HEX, RGB, CMYK y recomendaciones Pantone aproximadas, garantizando contraste y consistencia.", "next": "Aplicar la paleta a todas las variantes del logotipo.", "depends": "JM-04", "deliverable": "Paleta cromática técnica"}, {"id": "JM-08", "title": "Construir logotipo principal refinado", "priority": "P0", "date": "17/07/2026", "owner": "Diseño de marca", "status": "POR HACER", "acceptance": "La versión principal combina símbolo y nombre con proporciones equilibradas, lectura inmediata y aspecto de distribuidora profesional de barbería y belleza.", "next": "Preparar variantes de composición.", "depends": "JM-05, JM-06, JM-07", "deliverable": "Logotipo principal"}, {"id": "JM-09", "title": "Crear versión horizontal", "priority": "P1", "date": "17/07/2026", "owner": "Diseño de marca", "status": "POR HACER", "acceptance": "La composición horizontal funciona en encabezados web, facturas, vehículos, firmas y formatos panorámicos.", "next": "Validar lectura a distintos anchos.", "depends": "JM-08", "deliverable": "Logotipo horizontal"}, {"id": "JM-10", "title": "Crear isotipo, avatar y favicon", "priority": "P1", "date": "17/07/2026", "owner": "Diseño digital", "status": "POR HACER", "acceptance": "El símbolo independiente se reconoce sin el nombre y funciona en avatar circular, favicon y espacios reducidos.", "next": "Exportar tamaños digitales normalizados.", "depends": "JM-08", "deliverable": "Sistema de iconos de marca"}, {"id": "JM-11", "title": "Crear versiones monocromáticas y negativas", "priority": "P0", "date": "17/07/2026", "owner": "Diseño de producción", "status": "POR HACER", "acceptance": "Existen versiones negra, blanca, una tinta y reversa que conservan contraste, forma y reconocimiento.", "next": "Probar sobre fondos claros, oscuros y fotográficos.", "depends": "JM-08", "deliverable": "Variantes de color"}, {"id": "JM-12", "title": "Reconstruir y limpiar vectores", "priority": "P0", "date": "18/07/2026", "owner": "Producción vectorial", "status": "POR HACER", "acceptance": "Las formas tienen nodos limpios, curvas consistentes, texto convertido a trazados en copias de entrega y ningún elemento raster incrustado en el archivo maestro.", "next": "Realizar control técnico de nodos, rellenos, contornos y escalabilidad.", "depends": "JM-08, JM-09, JM-10, JM-11", "deliverable": "Archivo maestro SVG"}, {"id": "JM-13", "title": "Preparar archivos finales de producción", "priority": "P0", "date": "18/07/2026", "owner": "Preimpresión", "status": "POR HACER", "acceptance": "Se generan SVG, PDF vectorial y PNG transparente en resoluciones adecuadas; las versiones están nombradas y organizadas sin confusión.", "next": "Pasar los archivos a pruebas de uso real.", "depends": "JM-12", "deliverable": "Paquete de formatos"}, {"id": "JM-14", "title": "Validar impresión pequeña y gran formato", "priority": "P0", "date": "19/07/2026", "owner": "QA gráfico", "status": "POR HACER", "acceptance": "El logotipo se mantiene nítido y legible en tarjeta, hoja, material POP y simulación de valla; no aparecen pérdidas de detalle ni desequilibrios.", "next": "Registrar incidencias y devolver a diseño cualquier fallo.", "depends": "JM-13", "deliverable": "Evidencias de impresión"}, {"id": "JM-15", "title": "Validar bordado y aplicación textil", "priority": "P0", "date": "19/07/2026", "owner": "QA de aplicación", "status": "POR HACER", "acceptance": "La versión de bordado utiliza pocos colores, espesores suficientes y detalles compatibles con camisa, gorra y uniforme.", "next": "Crear una variante especial si el diseño principal no supera la prueba.", "depends": "JM-13", "deliverable": "Versión apta para bordado"}, {"id": "JM-16", "title": "Validar web, redes sociales y dispositivos", "priority": "P1", "date": "19/07/2026", "owner": "UX/UI y marketing digital", "status": "POR HACER", "acceptance": "La marca funciona en perfil, portada, publicación, encabezado web, móvil y escritorio con contraste y reconocimiento adecuados.", "next": "Corregir tamaños, márgenes o variantes que fallen.", "depends": "JM-10, JM-13", "deliverable": "Pruebas digitales"}, {"id": "JM-17", "title": "Realizar revisión QA del cliente", "priority": "P0", "date": "19/07/2026", "owner": "Product Owner y diseño", "status": "POR HACER", "acceptance": "Manuel revisa propuesta final, colores, tipografía, variantes y pruebas; las observaciones quedan registradas y clasificadas como obligatorias o opcionales.", "next": "Aplicar únicamente las correcciones aprobadas.", "depends": "JM-14, JM-15, JM-16", "deliverable": "Aprobación o lista final de cambios"}, {"id": "JM-18", "title": "Aplicar correcciones finales", "priority": "P0", "date": "20/07/2026", "owner": "Diseño de marca", "status": "POR HACER", "acceptance": "Todas las observaciones obligatorias de QA están resueltas sin introducir nuevos errores ni romper versiones ya aprobadas.", "next": "Congelar la versión final y preparar entrega.", "depends": "JM-17", "deliverable": "Versión final congelada"}, {"id": "JM-19", "title": "Crear guía rápida de identidad", "priority": "P1", "date": "20/07/2026", "owner": "Branding", "status": "POR HACER", "acceptance": "La guía incluye versiones del logo, colores, tipografías, área de seguridad, tamaño mínimo, fondos permitidos y usos incorrectos esenciales.", "next": "Usar la guía rápida como base del manual corporativo completo.", "depends": "JM-18", "deliverable": "Guía rápida de marca"}, {"id": "JM-20", "title": "Entregar paquete final y cerrar sprint", "priority": "P0", "date": "20/07/2026", "owner": "Scrum Team / Product Owner", "status": "POR HACER", "acceptance": "La entrega contiene archivos maestros, formatos de uso, variantes, pruebas, guía rápida y registro de aprobación; no quedan tareas P0 abiertas.", "next": "Realizar retrospectiva y abrir el backlog del manual corporativo completo.", "depends": "JM-18, JM-19", "deliverable": "Entrega final del 20/07/2026"}];
+const statuses = ["POR HACER","EN PROCESO","CULMINADO","VALIDAR QA","EN PRODUCCIÓN","EN ESPERA DE IMPLEMENTACIÓN"];
+const storageKey = "jean-master-kanban-2026-07-15-20-v1";
+let decisions = {};
+
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+}
+function loadLocal(){
+  try{decisions=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){decisions={}}
+}
+function persist(){
+  try{localStorage.setItem(storageKey,JSON.stringify(decisions))}
+  catch(e){alert("El navegador no permitió guardar. Exporta las decisiones para conservarlas.")}
+}
+function effectiveTask(task){
+  const d=decisions[task.id]||{};
+  return {...task,status:d.state||task.status,note:d.note||"",updatedAt:d.updatedAt||""};
+}
+function cardHtml(task){
+  const state=effectiveTask(task).status;
+  return `<article class="card" data-id="${esc(task.id)}" data-base-status="${esc(task.status)}">
+    <div class="id">${esc(task.id)} · ${esc(task.priority)}</div>
+    <h3>${esc(task.title)}</h3>
+    <div class="meta">${esc(task.owner)}<br>Entregable: ${esc(task.deliverable)}</div>
+    <span class="date-badge">${esc(task.date)}</span>
+    <details><summary>Ver detalle</summary>
+      <h4>Criterio de aceptación</h4><p>${esc(task.acceptance)}</p>
+      <h4>Dependencia</h4><p>${esc(task.depends)}</p>
+      <h4>Siguiente acción</h4><p>${esc(task.next)}</p>
+    </details>
+    <div class="user-state" hidden></div>
+    <details class="action-panel"><summary>Actualizar tarea</summary>
+      <label>Nuevo estado<select class="state-select">${statuses.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}</select></label>
+      <label>Observación<textarea class="note" rows="3" placeholder="Decisión, corrección, resultado de QA o bloqueo"></textarea></label>
+      <div class="card-actions">
+        <button onclick="quickAction(this,'EN PRODUCCIÓN')">Aprobar QA</button>
+        <button class="reject" onclick="quickAction(this,'EN PROCESO')">Rechazar QA</button>
+        <button onclick="saveCard(this)">Guardar estado</button>
+      </div>
+      <div class="decision-history"></div>
+    </details>
+  </article>`;
+}
+function buildBoard(){
+  const board=document.getElementById("board");
+  board.innerHTML=statuses.map(status=>`<section class="column" data-status="${esc(status)}">
+    <header><h2>${esc(status)}</h2><span class="count">0</span></header><div class="card-list"></div>
+  </section>`).join("");
+  tasks.forEach(task=>{
+    const temp=document.createElement("div");temp.innerHTML=cardHtml(task);
+    board.querySelector(`[data-status="${CSS.escape(task.status)}"] .card-list`).appendChild(temp.firstElementChild);
+  });
+}
+function findColumn(status){return [...document.querySelectorAll(".column")].find(c=>c.dataset.status===status)}
+function refreshBoard(){
+  document.querySelectorAll(".card").forEach(card=>{
+    const task=tasks.find(t=>t.id===card.dataset.id);
+    const d=decisions[card.dataset.id]||{};
+    const state=statuses.includes(d.state)?d.state:task.status;
+    findColumn(state).querySelector(".card-list").appendChild(card);
+    card.querySelector(".state-select").value=state;
+    card.querySelector(".note").value=d.note||"";
+    const badge=card.querySelector(".user-state");
+    badge.textContent=d.state?`Decisión registrada · ${state}`:"";
+    badge.hidden=!d.state;
+    const history=card.querySelector(".decision-history");
+    history.replaceChildren();
+    (d.history||[]).slice().reverse().slice(0,5).forEach(item=>{
+      const p=document.createElement("p");
+      p.textContent=`${item.at} · ${item.state}${item.note?" · "+item.note:""}`;
+      history.appendChild(p);
+    });
+  });
+  document.querySelectorAll(".column").forEach(c=>c.querySelector(".count").textContent=c.querySelectorAll(".card").length);
+}
+function record(card,state,note){
+  if(!statuses.includes(state))return;
+  const id=card.dataset.id,d=decisions[id]||{},at=new Date().toLocaleString("es-ES");
+  const history=Array.isArray(d.history)?d.history:[];
+  history.push({state,note,at});
+  decisions[id]={state,note,at,updatedAt:new Date().toISOString(),history};
+  persist();refreshBoard();
+}
+function saveCard(button){
+  const card=button.closest(".card");
+  record(card,card.querySelector(".state-select").value,card.querySelector(".note").value.trim());
+}
+function quickAction(button,state){
+  const card=button.closest(".card");
+  record(card,state,card.querySelector(".note").value.trim());
+}
+function save(content,name,type){
+  const blob=new Blob([content],{type});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function rows(){
+  return tasks.map(t=>effectiveTask(t));
+}
+function downloadTxt(){
+  const txt=rows().map(t=>`${t.id} | ${t.status} | ${t.priority} | ${t.date} | ${t.title}
+Responsable: ${t.owner}
+Entregable: ${t.deliverable}
+Dependencia: ${t.depends}
+Criterio: ${t.acceptance}
+Siguiente acción: ${t.next}
+Observación: ${t.note}`).join("\n\n");
+  save("\ufeff"+txt,"KANBAN_JEAN_MASTER_15-20_JUL_2026.txt","text/plain;charset=utf-8");
+}
+function downloadCsv(){
+  const cols=["id","title","priority","date","owner","status","deliverable","depends","acceptance","next","note","updatedAt"];
+  const quote=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+  const csv=[cols.join(";"),...rows().map(r=>cols.map(c=>quote(r[c])).join(";"))].join("\r\n");
+  save("\ufeff"+csv,"KANBAN_JEAN_MASTER_15-20_JUL_2026.csv","text/csv;charset=utf-8");
+}
+function exportDecisions(){
+  save(JSON.stringify({version:1,project:"Jean Master Barber Supply",sprint:"15/07/2026-20/07/2026",exportedAt:new Date().toISOString(),decisions},null,2),
+  "KANBAN_JEAN_MASTER_DECISIONES.json","application/json;charset=utf-8");
+}
+function importDecisions(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result),incoming=parsed.decisions||parsed;
+      Object.entries(incoming).forEach(([id,d])=>{
+        if(tasks.some(t=>t.id===id)&&statuses.includes(d.state))decisions[id]=d;
+      });
+      persist();refreshBoard();alert("Decisiones importadas correctamente.");
+    }catch(e){alert("El archivo no contiene decisiones válidas.");}
+    input.value="";
+  };
+  reader.readAsText(file,"utf-8");
+}
+function resetDecisions(){
+  if(confirm("¿Deseas borrar todos los cambios locales y volver al estado inicial?")){
+    decisions={};persist();refreshBoard();
+  }
+}
+buildBoard();loadLocal();refreshBoard();
+</script>
+</body>
+</html>
